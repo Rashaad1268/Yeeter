@@ -1,8 +1,8 @@
+import 'dart:async';
 import 'dart:io';
 
+import 'package:collection/collection.dart';
 import 'package:cookie_jar/cookie_jar.dart';
-import 'package:dio/adapter_browser.dart';
-import 'package:dio/browser_imp.dart';
 import 'package:dio/dio.dart';
 import 'package:dio_cookie_manager/dio_cookie_manager.dart';
 import 'package:flutter/foundation.dart';
@@ -12,33 +12,48 @@ import 'package:path_provider/path_provider.dart';
 import './constants.dart';
 import './state.dart';
 
+class CSRFCookieManager extends CookieManager {
+  CSRFCookieManager(CookieJar cookieJar) : super(cookieJar);
+
+  @override
+  void onRequest(
+      RequestOptions options, RequestInterceptorHandler handler) async {
+    cookieJar.loadForRequest(options.uri).then((cookies) {
+      super.onRequest(options, handler);
+      final csrfCookie =
+          cookies.firstWhereOrNull((c) => c.name == 'csrftoken')?.value;
+
+      if (csrfCookie != null) {
+        options.headers['X-CSRFToken'] = csrfCookie;
+      }
+      var cookie = CookieManager.getCookies(cookies);
+      if (cookie.isNotEmpty) {
+        options.headers[HttpHeaders.cookieHeader] = cookie;
+      }
+    });
+  }
+}
+
 class ApiClient {
   Dio? dio;
 
   Future<Dio> getDioInstance() async {
-    if (kIsWeb) {
-      BaseOptions options = BaseOptions(
-        baseUrl: apiUrl,
-        headers: {
-          'Accept': 'application/json',
-        },
-      );
-      dio = DioForBrowser(options);
-      var adapter = BrowserHttpClientAdapter();
-      // This property will automatically set cookies
-      adapter.withCredentials = true;
-      dio!.httpClientAdapter = adapter;
-      return dio!;
-    } else {
-      dio = Dio();
+    BaseOptions options = BaseOptions(
+      baseUrl: apiUrl,
+      headers: {
+        'Accept': 'application/json',
+      },
+    );
+    dio = Dio(options);
+    if (!kIsWeb) {
       Directory appDocDir = await getApplicationDocumentsDirectory();
       String appDocPath = appDocDir.path;
-
       final cj = PersistCookieJar(
           ignoreExpires: false, storage: FileStorage('$appDocPath/.cookies/'));
-      dio!.interceptors.add(CookieManager(cj));
-      return dio!;
+      dio!.interceptors.add(CSRFCookieManager(cj));
     }
+
+    return dio!;
   }
 
   Options getRequestOptions(ApiObject header) {
@@ -46,6 +61,7 @@ class ApiClient {
     return Options(
       headers: header,
       followRedirects: false,
+      extra: {'withCredentials': true},
       validateStatus: (status) {
         if (ignoredStatuses.contains(status) || status == null) return true;
         return isStatusOk(status);
@@ -88,6 +104,7 @@ class ApiClient {
         throw Exception('Unsupported http method $method');
     }
 
+    // print(response.data);
     if ([401, 403].contains(response.statusCode)) {
       ref.read(applicationStateProvider.notifier).setIsLoggedIn(false);
       return null;

@@ -31,68 +31,61 @@ class _LoginPageState extends ConsumerState<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-
     return Scaffold(
-      body: Center(
-        child: SizedBox(
-          width: size.width / 1.5,
-          height: size.height * 0.9,
-          child: Card(
-              elevation: 5,
-              child: Form(
-                key: _formKey,
-                child: Column(children: [
-                  Text('Login', style: Theme.of(context).textTheme.headline3),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Text("Don't have an account? "),
-                        GestureDetector(
-                            onTap: () {
-                              Navigator.pushNamed(context, '/signup');
-                            },
-                            child: const Text('Signup',
-                                style: TextStyle(color: Colors.blue)))
-                      ],
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: TextFormField(
-                      controller: emailController,
-                      validator: validateEmail,
-                      autovalidateMode: AutovalidateMode.always,
-                      decoration: const InputDecoration(
-                        labelText: 'Email',
-                        border: OutlineInputBorder(),
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: TextFormField(
-                      controller: passwordController,
-                      validator: validatePassword,
-                      autovalidateMode: AutovalidateMode.onUserInteraction,
-                      obscureText: true,
-                      decoration: const InputDecoration(
-                        labelText: 'Password',
-                        border: OutlineInputBorder(),
-                      ),
-                    ),
-                  ),
-                  ElevatedButton(
-                      onPressed: () {
-                        if (_formKey.currentState!.validate()) {
-                          attemptLogin();
-                        }
+      body: SafeArea(
+        child: Form(
+          key: _formKey,
+          child: Column(children: [
+            Text('Login', style: Theme.of(context).textTheme.headline3),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text("Don't have an account? "),
+                  GestureDetector(
+                      onTap: () {
+                        Navigator.pushNamed(context, '/signup');
                       },
-                      child: const Text('Login'))
-                ]),
-              )),
+                      child: const Text('Signup',
+                          style: TextStyle(color: Colors.blue)))
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: TextFormField(
+                controller: emailController,
+                validator: validateEmail,
+                autovalidateMode: AutovalidateMode.always,
+                decoration: const InputDecoration(
+                  labelText: 'Email',
+                  border: OutlineInputBorder(),
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: TextFormField(
+                controller: passwordController,
+                validator: validatePassword,
+                autovalidateMode: AutovalidateMode.onUserInteraction,
+                obscureText: true,
+                decoration: const InputDecoration(
+                  labelText: 'Password',
+                  border: OutlineInputBorder(),
+                ),
+              ),
+            ),
+            ElevatedButton(
+                style: ElevatedButton.styleFrom(primary: Colors.indigo),
+                onPressed: () {
+                  if (_formKey.currentState!.validate()) {
+                    attemptLogin();
+                  }
+                },
+                child: const Text('Login'))
+          ]),
         ),
       ),
     );
@@ -118,109 +111,103 @@ class _SignupPageState extends ConsumerState<SignupPage> {
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
     return Scaffold(
-      body: Center(
-        child: SizedBox(
-          width: size.width / 1.5,
-          height: size.height * 0.9,
-          child: Card(
-              elevation: 5,
-              child: Form(
-                key: _formKey,
-                child: Column(children: [
-                  Text('Welcome aboard',
-                      style: Theme.of(context).textTheme.headline3),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Text('Already have an account? '),
-                        GestureDetector(
-                            onTap: () {
-                              Navigator.pop(context);
-                            },
-                            child: const Text('Login',
-                                style: TextStyle(color: Colors.blue)))
-                      ],
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: TextFormField(
-                      controller: usernameController,
-                      validator: validateUsername,
-                      autovalidateMode: AutovalidateMode.always,
-                      decoration: const InputDecoration(
-                        labelText: 'Username',
-                        border: OutlineInputBorder(),
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: TextFormField(
-                      controller: emailController,
-                      validator: validateEmail,
-                      autovalidateMode: AutovalidateMode.always,
-                      decoration: const InputDecoration(
-                        labelText: 'Email',
-                        border: OutlineInputBorder(),
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: TextFormField(
-                      controller: handleController,
-                      decoration: const InputDecoration(
-                        labelText: 'Handle',
-                        border: OutlineInputBorder(),
-                      ),
-                      validator: validateHandle,
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: TextFormField(
-                      controller: password1Controller,
-                      validator: validatePassword,
-                      obscureText: true,
-                      autovalidateMode: AutovalidateMode.onUserInteraction,
-                      decoration: const InputDecoration(
-                        labelText: 'Password 1',
-                        border: OutlineInputBorder(),
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: TextFormField(
-                      controller: password2Controller,
-                      validator: (pswd2) {
-                        if (password1Controller.text != pswd2) {
-                          return 'Passwords do not match';
-                        }
-                        return null;
+      body: SafeArea(
+        child: Form(
+          key: _formKey,
+          child: Column(children: [
+            Text('Welcome aboard!',
+                style: Theme.of(context).textTheme.headline3),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text('Already have an account? '),
+                  GestureDetector(
+                      onTap: () {
+                        Navigator.pop(context);
                       },
-                      obscureText: true,
-                      autovalidateMode: AutovalidateMode.onUserInteraction,
-                      decoration: const InputDecoration(
-                        labelText: 'Password 2',
-                        border: OutlineInputBorder(),
-                      ),
-                    ),
-                  ),
-                  ElevatedButton(
-                      onPressed: () {
-                        if (_formKey.currentState!.validate()) {
-                          attemptSignup();
-                        }
-                      },
-                      child: const Text('Signup'))
-                ]),
-              )),
+                      child: const Text('Login',
+                          style: TextStyle(color: Colors.blue)))
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: TextFormField(
+                controller: usernameController,
+                validator: validateUsername,
+                autovalidateMode: AutovalidateMode.always,
+                decoration: const InputDecoration(
+                  labelText: 'Username',
+                  border: OutlineInputBorder(),
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: TextFormField(
+                controller: emailController,
+                validator: validateEmail,
+                autovalidateMode: AutovalidateMode.always,
+                decoration: const InputDecoration(
+                  labelText: 'Email',
+                  border: OutlineInputBorder(),
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: TextFormField(
+                controller: handleController,
+                decoration: const InputDecoration(
+                  labelText: 'Handle',
+                  border: OutlineInputBorder(),
+                ),
+                validator: validateHandle,
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: TextFormField(
+                controller: password1Controller,
+                validator: validatePassword,
+                obscureText: true,
+                autovalidateMode: AutovalidateMode.onUserInteraction,
+                decoration: const InputDecoration(
+                  labelText: 'Password 1',
+                  border: OutlineInputBorder(),
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: TextFormField(
+                controller: password2Controller,
+                validator: (pswd2) {
+                  if (password1Controller.text != pswd2) {
+                    return 'Passwords do not match';
+                  }
+                  return null;
+                },
+                obscureText: true,
+                autovalidateMode: AutovalidateMode.onUserInteraction,
+                decoration: const InputDecoration(
+                  labelText: 'Password 2',
+                  border: OutlineInputBorder(),
+                ),
+              ),
+            ),
+            ElevatedButton(
+                style: ElevatedButton.styleFrom(primary: Colors.indigo),
+                onPressed: () {
+                  if (_formKey.currentState!.validate()) {
+                    attemptSignup();
+                  }
+                },
+                child: const Text('Signup'))
+          ]),
         ),
       ),
     );

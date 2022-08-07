@@ -30,7 +30,7 @@ class CustomUserAdmin(UserAdmin):
             None,
             {
                 "classes": ("wide",),
-                "fields": ("username", "handle", "password1", "password2"),
+                "fields": ("username", "email", "handle", "password1", "password2"),
             },
         ),
     )
@@ -40,3 +40,8 @@ class CustomUserAdmin(UserAdmin):
 @admin.register(models.Profile)
 class ProfileAdmin(admin.ModelAdmin):
     list_display = ('user',)
+
+
+@admin.register(models.UserRelations)
+class UserRelationsAdmin(admin.ModelAdmin):...
+#     list_display = ('user_rel', '', 'type')

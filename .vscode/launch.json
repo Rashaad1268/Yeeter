@@ -5,7 +5,7 @@
     "version": "0.2.0",
     "configurations": [
         {
-             "name": "frontend",
+            "name": "frontend",
             "cwd": "src/frontend",
             "request": "launch",
             "type": "dart",

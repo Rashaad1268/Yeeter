@@ -15,9 +15,7 @@ class _DesktopLayoutState extends ConsumerState<DesktopLayout> {
   @override
   void initState() {
     super.initState();
-    apiClient.fetch('auth/users/me/', 'GET', ref: ref).then((response) {
-      print(response?.data);
-    });
+    initializeData(ref);
   }
 
   @override
@@ -28,6 +26,10 @@ class _DesktopLayoutState extends ConsumerState<DesktopLayout> {
       return const LoginPage();
     }
 
+    if (applicationState['isLoading']) {
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
+    }
+
     final userData = ref.watch(userDataProvider);
     return Scaffold(
       body: Row(
@@ -36,7 +38,7 @@ class _DesktopLayoutState extends ConsumerState<DesktopLayout> {
           Expanded(
             child: Builder(builder: (context) {
               if (applicationState['isLoggedIn']) {
-                return Center(child: Text('Hello ${userData['username']}'));
+                return Center(child: Text('Hello ${userData!.username}'));
               } else {
                 return const Center(child: Text('you are **not** logged in'));
               }

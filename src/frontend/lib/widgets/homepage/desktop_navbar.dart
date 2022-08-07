@@ -63,7 +63,7 @@ class DesktopSidebar extends StatelessWidget {
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Text(
-                          'Yeet.it',
+                          'Yeeter',
                           style: Theme.of(context).textTheme.displaySmall,
                         ),
                       ),
@@ -71,8 +71,6 @@ class DesktopSidebar extends StatelessWidget {
                   ),
                 )),
             const SidebarTile(leading: Icon(Icons.home), title: 'Home'),
-            const SidebarTile(
-                leading: Icon(Icons.notifications), title: 'Notifications'),
             const SidebarTile(leading: Icon(Icons.mail), title: 'Messages'),
             const SidebarTile(leading: Icon(Icons.person), title: 'Profile'),
             InkWell(

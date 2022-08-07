@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:frontend/layout/layouts.dart';
-import 'package:frontend/pages/authentication.dart';
-import 'package:frontend/widgets/widgets.dart';
+import 'package:frontend/utils/routes.dart';
 
 void main() {
   runApp(const ProviderScope(child: MyApp()));
@@ -18,16 +16,13 @@ class MyApp extends StatelessWidget {
       title: 'Yeeter',
       theme: ThemeData(
         primarySwatch: Colors.blue,
-        // brightness: Brightness.dark,
+        primaryColor: Colors.blue,
+        // brightness: Brightness.dark
       ),
-      routes: {
-        '/': (context) => const Responsive(
-              smallScreen: MobileLayout(),
-              mediumScreen: DesktopLayout(),
-              largeScreen: DesktopLayout(),
-            ),
-        '/signup': (context) => const SignupPage(),
-      },
+      routes: routes,
+      initialRoute: '/',
+      onGenerateRoute: onGenerateRoute,
+      onUnknownRoute: onUnknownRoute,
     );
   }
 }
