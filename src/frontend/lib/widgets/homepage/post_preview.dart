@@ -11,14 +11,19 @@ class PostPreview extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      leading: getProfilePic(post.author, context, 20),
+      leading: GestureDetector(
+          onTap: () {
+            Navigator.pushNamed(context, '/user/${post.author.id}',
+                arguments: post.author);
+          },
+          child: getProfilePic(post.author, context, 20)),
       title: Padding(
         padding: const EdgeInsets.only(bottom: 3),
         child: Row(
           children: [
             Padding(
               padding: const EdgeInsets.only(right: 5),
-              child: Text(post.author.username,
+              child: SelectableText(post.author.username,
                   style: const TextStyle(fontWeight: FontWeight.w500)),
             ),
             Text('@${post.author.handle} · ',
@@ -37,7 +42,8 @@ class PostPreview extends StatelessWidget {
       subtitle: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(post.body, style: Theme.of(context).textTheme.bodyMedium),
+          SelectableText(post.body,
+              style: Theme.of(context).textTheme.bodyMedium),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [

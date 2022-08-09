@@ -30,6 +30,8 @@ class UserSerializer(UserCreateSerializer):
     profile = UserProfileSerializer()
     followers_count = serializers.SerializerMethodField()
     following_count = serializers.SerializerMethodField()
+    is_following = serializers.SerializerMethodField()
+    is_following_me = serializers.SerializerMethodField()
 
     def get_followers_count(self, user):
         return UserRelations.objects.filter(type=1, target=user).count()
@@ -37,9 +39,20 @@ class UserSerializer(UserCreateSerializer):
     def get_following_count(self, user):
         return UserRelations.objects.filter(type=1, actor=user).count()
 
+    def get_is_following(self, user):
+        request = self.context['request']
+        return UserRelations.objects.filter(type=1, actor=request.user,
+                                            target=user).exists()
+
+    def get_is_following_me(self, user):
+        request = self.context['request']
+        return UserRelations.objects.filter(type=1, actor=user,
+                                            target=request.user).exists()
+
     class Meta(UserCreateSerializer.Meta):
         fields = ('id', 'username', 'handle', 'is_online', 'is_staff', 'profile',
-                  'followers_count', 'following_count')
+                  'followers_count', 'following_count', 'is_following',
+                  'is_following_me')
 
 
 class LoginSerializer(serializers.Serializer):

@@ -1,11 +1,10 @@
-from rest_framework import viewsets, pagination, status
+from posts.models import Post
+from posts.serializers import PostCreateSerializer, PostSerializer
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import pagination, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.generics import get_object_or_404
-from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.response import Response
-
-from .serializers import PostCreateSerializer, PostSerializer
-from .models import Post
 
 
 class PostsPaginator(pagination.PageNumberPagination):
@@ -35,3 +34,11 @@ class PostsViewSet(viewsets.ModelViewSet):
             post.likes.add(request.user)
 
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        post = serializer.save()
+        headers = self.get_success_headers(serializer.data)
+        return Response(PostSerializer(post, context=self.get_serializer_context()).data,
+                        status=status.HTTP_201_CREATED, headers=headers)

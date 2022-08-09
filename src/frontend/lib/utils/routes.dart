@@ -1,24 +1,45 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/layout/layouts.dart';
+import 'package:frontend/models/post.dart';
+import 'package:frontend/models/user.dart';
+import 'package:frontend/pages/homepage.dart';
 import 'package:frontend/pages/pages.dart';
-
-import '../widgets/widgets.dart';
+import 'package:frontend/widgets/public/widgets.dart';
 
 Map<String, Widget Function(BuildContext)> routes = {
-  '/': (context) => const Responsive(
-        smallScreen: MobileLayout(),
-        mediumScreen: MobileLayout(),
-        largeScreen: DesktopLayout(),
-      ),
+  '/': (context) => const HomePage(),
   '/signup': (context) => const SignupPage(),
 };
 
 Route? onGenerateRoute(RouteSettings settings) {
-  final List<String> pathElements = settings.name!.split('/');
-  if (pathElements[0] != '' || pathElements.length == 1) {
-    return null;
+  final pathItems = settings.name!
+      .split('/'); // to seperate the url arguments from the actual endpoint
+
+  Widget? page;
+  bool fullScreenDialog = false;
+
+  switch (pathItems[1]) {
+    case 'create-post':
+      page = CreatePostPage(quoting: settings.arguments as Post?);
+      fullScreenDialog = true;
+      break;
+
+    case 'post':
+      page = PostDetail(settings.arguments as Post);
+      break;
+
+    case 'user':
+      page = UserProfileWithPosts(
+        settings.arguments as User,
+        includeAppBar: true,
+      );
+      break;
   }
-  return null;
+  if (page != null) {
+    return MaterialPageRoute(
+        builder: (context) => page!, fullscreenDialog: fullScreenDialog);
+  } else {
+    return onUnknownRoute(settings);
+  }
 }
 
 Route onUnknownRoute(RouteSettings settings) {

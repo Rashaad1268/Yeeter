@@ -6,6 +6,7 @@ import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dio/dio.dart';
 import 'package:dio_cookie_manager/dio_cookie_manager.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -104,7 +105,6 @@ class ApiClient {
         throw Exception('Unsupported http method $method');
     }
 
-    // print(response.data);
     if ([401, 403].contains(response.statusCode)) {
       ref.read(applicationStateProvider.notifier).setIsLoggedIn(false);
       return null;
@@ -122,4 +122,43 @@ bool? isResponseOk(Response? response) {
   if (response == null) return null;
   if (response.statusCode == null) return null;
   return isStatusOk(response.statusCode!);
+}
+
+void showApiErrors(BuildContext context, Response? response) {
+  if (response == null) {
+    // Sometimes the response can be null if the user isn't logged in
+    return;
+  }
+  if (isResponseOk(response) == true) {
+    // If it was a successful request there won't be any errors so return
+    return;
+  }
+
+  if (response.data is! Map<String, dynamic>) {
+    // Check if the datatype of the response is correct
+    return;
+  }
+
+  /*
+    Most of the time only one error message will exist
+    but just in case lets make it show all messages
+  */
+  List<String> errorMessages = [];
+
+  for (MapEntry<String, dynamic> fieldError
+      in (response.data as Map<String, dynamic>).entries) {
+    String fieldName = fieldError.key != 'message' ? '${fieldError.key}: ' : '';
+    if (fieldError.value is List) {
+      errorMessages.add(fieldName + fieldError.value.join(', '));
+    } else if (fieldError.value is String) {
+      errorMessages.add(fieldName + fieldError.value);
+    }
+  }
+
+  for (String errorMessage in errorMessages) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text(errorMessage),
+      behavior: SnackBarBehavior.floating,
+    ));
+  }
 }

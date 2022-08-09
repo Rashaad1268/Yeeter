@@ -28,3 +28,10 @@ String? validatePassword(String? email) {
   // TODO: Implement this
   return null;
 }
+
+String? postBodyValidator(String? content) {
+  if (content == null || content.isEmpty) {
+    return 'Post body can\'t be empty';
+  }
+  return null;
+}

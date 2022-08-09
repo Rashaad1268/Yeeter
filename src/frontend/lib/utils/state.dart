@@ -50,4 +50,14 @@ class PostsFeedNotifier extends StateNotifier<ApiObject> {
     ];
     state = newPostsPaginator;
   }
+
+  void addPost(ApiObject post, {required bool first}) {
+    final newState = {...state};
+    if (first) {
+      newState['results'] = [post, ...(newState['results'] ?? [])];
+    } else {
+      newState['results'] = [...(newState['results'] ?? []), post];
+    }
+    state = newState;
+  }
 }

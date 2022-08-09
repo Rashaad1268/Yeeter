@@ -3,6 +3,8 @@ import 'package:frontend/utils/utils.dart';
 
 import '../../../models/user.dart';
 
+export './user_profile_w_posts.dart';
+
 class UserProfile extends StatelessWidget {
   final User user;
   const UserProfile(this.user, {Key? key}) : super(key: key);
@@ -68,12 +70,15 @@ class UserProfile extends StatelessWidget {
               child: Padding(
                 padding: EdgeInsets.only(top: bannerHeight, right: 8),
                 child: OutlinedButton(
-                    style: OutlinedButton.styleFrom(shadowColor: Colors.blue),
+                    style: OutlinedButton.styleFrom(
+                        primary: user.isFollowing ? Colors.red : Colors.blue),
                     onPressed: () {
                       // TODO: IMPLEMENT FOLLOWING
                       print('Follow button clicked');
                     },
-                    child: const Text('Follow')),
+                    child: user.isFollowing
+                        ? const Text('Unfollow')
+                        : const Text('Follow')),
               ),
             ),
             Align(

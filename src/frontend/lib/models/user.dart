@@ -22,6 +22,8 @@ class User {
   final bool isStaff;
   final int followersCount;
   final int followingCount;
+  final bool isFollowing;
+  final bool isFollowingMe;
   // ignore: library_private_types_in_public_api
   final _Profile profile;
 
@@ -33,6 +35,8 @@ class User {
       required this.isStaff,
       required this.followersCount,
       required this.followingCount,
+      required this.isFollowing,
+      required this.isFollowingMe,
       // ignore: library_private_types_in_public_api
       required this.profile});
 
@@ -45,6 +49,8 @@ class User {
         isStaff: data['is_staff'],
         followersCount: data['followers_count'],
         followingCount: data['following_count'],
+        isFollowing: data['is_following'],
+        isFollowingMe: data['is_following_me'],
         profile: _Profile.fromMap(data['profile']));
   }
 }
