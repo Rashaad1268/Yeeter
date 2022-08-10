@@ -34,6 +34,14 @@ class PostsViewSet(viewsets.ModelViewSet):
             post.likes.add(request.user)
 
         return Response(status=status.HTTP_204_NO_CONTENT)
+    
+    @action(methods=("POST",), detail=True, url_path='re-post')
+    def re_post(self, request, pk):
+        post = get_object_or_404(Post, pk=pk)
+        new_post = Post.objects.create(author=request.user, re_post=post)
+
+        return Response(PostSerializer(new_post, context=self.get_serializer_context()).data,
+                        status=status.HTTP_201_CREATED)
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)

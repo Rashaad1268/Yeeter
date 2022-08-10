@@ -18,6 +18,8 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         primaryColor: Colors.blue,
         // brightness: Brightness.dark
+        snackBarTheme:
+            const SnackBarThemeData(behavior: SnackBarBehavior.floating),
       ),
       routes: routes,
       initialRoute: '/',

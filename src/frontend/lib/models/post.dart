@@ -28,17 +28,21 @@ class QuotedPost {
 class Post {
   final int id;
   final User author;
-  final String body;
+  final String? body;
   final QuotedPost? quoting;
-  final String createdAt;
-  final String? editedAt;
   int likeCount;
   bool isLiked;
+  final Post? rePost;
+  int rePostCount;
+  final String createdAt;
+  final String? editedAt;
   Post({
     required this.id,
     required this.body,
     required this.author,
     required this.quoting,
+    required this.rePost,
+    required this.rePostCount,
     required this.createdAt,
     required this.editedAt,
     required this.likeCount,
@@ -53,6 +57,8 @@ class Post {
         quoting: data['quoting'] != null
             ? QuotedPost.fromMap(data['quoting'])
             : null,
+        rePost: data['re_post'] != null ? Post.fromMap(data['re_post']) : null,
+        rePostCount: data['re_post_count'],
         createdAt: data['created_at'],
         editedAt: data['edited_at'],
         likeCount: data['like_count'],
