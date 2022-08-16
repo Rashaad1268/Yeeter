@@ -1,10 +1,11 @@
-from posts.models import Post
-from posts.serializers import PostCreateSerializer, PostSerializer
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import pagination, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
+
+from posts.models import Post
+from posts.serializers import PostCreateSerializer, PostSerializer
 
 
 class PostsPaginator(pagination.PageNumberPagination):
@@ -12,10 +13,15 @@ class PostsPaginator(pagination.PageNumberPagination):
 
 
 class PostsViewSet(viewsets.ModelViewSet):
-    queryset = Post.objects.all().order_by('?')
     pagination_class = PostsPaginator
     filter_backends = (DjangoFilterBackend,)
-    filterset_fields = ('author', 'body', 'created_at', 'edited_at')
+    filterset_fields = ("author", "body", "created_at", "edited_at")
+
+    def get_queryset(self):
+        if self.action == "list" and not self.request.GET:
+            return Post.objects.all().order_by("?")
+        else:
+            return Post.objects.all().order_by("-created_at")
 
     def get_serializer_class(self):
         if self.action.lower() in ("create", "partial_update", "update", "delete"):

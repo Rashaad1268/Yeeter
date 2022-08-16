@@ -5,7 +5,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../pages/pages.dart';
 import '../utils/utils.dart';
 import '../widgets/homepage/widgets.dart';
-import '../widgets/public/user_profile/user_profile.dart';
+import '../widgets/public/user_profile/user_profile_w_posts.dart';
 
 class MobileLayout extends ConsumerWidget {
   const MobileLayout({Key? key}) : super(key: key);

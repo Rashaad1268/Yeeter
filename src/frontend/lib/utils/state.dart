@@ -17,6 +17,11 @@ final postsFeedProvider =
   return PostsFeedNotifier();
 });
 
+final postsFromUserProvider =
+    StateNotifierProvider<PostsFromUserNotifier, Map<int, ApiObject>>((ref) {
+  return PostsFromUserNotifier();
+});
+
 class UserDataNotifier extends StateNotifier<User?> {
   UserDataNotifier() : super(null);
 
@@ -58,6 +63,25 @@ class PostsFeedNotifier extends StateNotifier<ApiObject> {
     } else {
       newState['results'] = [...(newState['results'] ?? []), post];
     }
+    state = newState;
+  }
+}
+
+class PostsFromUserNotifier extends StateNotifier<Map<int, ApiObject>> {
+  PostsFromUserNotifier() : super({});
+
+  void setPostsForUser(int userId, ApiObject postsPaginator) {
+    final newState = {...state};
+    newState[userId] = postsPaginator;
+    state = newState;
+  }
+
+  void addPostsForUser(int userId, ApiObject newPostsPaginator) {
+    final newState = {...state};
+    newPostsPaginator['results'] = [
+      ...(newState[userId]!['results'] ?? []),
+      ...newPostsPaginator['results']
+    ];
     state = newState;
   }
 }

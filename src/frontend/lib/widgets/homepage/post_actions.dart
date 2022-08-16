@@ -19,16 +19,17 @@ class _LikePostButtonState extends ConsumerState<LikePostButton> {
     return Row(
       children: [
         IconButton(
+          focusColor: Colors.pink[100],
           onPressed: () async {
             final response = await apiClient
                 .fetch('posts/${widget.post.id}/like/', 'POST', ref: ref);
             if (isResponseOk(response) == true) {
               setState(() {
                 if (widget.post.isLiked) {
-                  // Unliking the post
+                  // Unlike the post if it's already liked
                   widget.post.likeCount--;
                 } else {
-                  // Liking the post
+                  // Like the post if it's not already liked
                   widget.post.likeCount++;
                 }
                 widget.post.isLiked = !widget.post.isLiked;

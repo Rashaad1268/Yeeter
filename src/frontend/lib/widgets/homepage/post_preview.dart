@@ -22,7 +22,7 @@ class PostPreview extends StatelessWidget {
               const SizedBox(
                 width: 8,
               ),
-              Text('Re-Yeeted by ${post.author.username}')
+              SelectableText('Re-Yeeted by ${post.author.username}')
             ],
           ),
           PostPreview(post.rePost!),
@@ -45,10 +45,14 @@ class PostPreview extends StatelessWidget {
               child: SelectableText(post.author.username,
                   style: const TextStyle(fontWeight: FontWeight.w500)),
             ),
-            Text('@${post.author.handle} · ',
+            SelectableText('@${post.author.handle}',
                 style: TextStyle(color: Colors.grey[500])),
-            Text(formatPostTimeStamp(DateTime.parse(post.createdAt)),
-                style: TextStyle(color: Colors.grey[500])),
+            Tooltip(
+              message: dtFormatWithTime.format(DateTime.parse(post.createdAt)),
+              child: Text(
+                  ' · ${formatPostTimeStamp(DateTime.parse(post.createdAt))}',
+                  style: TextStyle(color: Colors.grey[500])),
+            ),
             if (post.editedAt != null)
               Tooltip(
                   message:

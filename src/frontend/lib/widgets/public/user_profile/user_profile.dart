@@ -15,7 +15,7 @@ class UserProfile extends StatelessWidget {
         alignment: Alignment.centerLeft,
         child: Padding(
             padding: EdgeInsets.only(top: paddingTop, left: 20),
-            child: Text((user.profile.aboutMe).toString())),
+            child: SelectableText((user.profile.aboutMe).toString())),
       );
     }
     return const SizedBox();
@@ -46,9 +46,9 @@ class UserProfile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double bannerHeight = MediaQuery.of(context).size.height * 0.2;
+    double bannerHeight = MediaQuery.of(context).size.height / 4;
     double profilePicDiameter = 150;
-    TextStyle? follingTextStyle = Theme.of(context).textTheme.labelLarge;
+    final follingTextStyle = Theme.of(context).textTheme.labelLarge!;
 
     return Stack(
       clipBehavior: Clip.none,
@@ -68,24 +68,33 @@ class UserProfile extends StatelessWidget {
             Align(
               alignment: Alignment.bottomRight,
               child: Padding(
-                padding: EdgeInsets.only(top: bannerHeight, right: 8),
-                child: OutlinedButton(
-                    style: OutlinedButton.styleFrom(
-                        primary: user.isFollowing ? Colors.red : Colors.blue),
-                    onPressed: () {
-                      // TODO: IMPLEMENT FOLLOWING
-                      print('Follow button clicked');
-                    },
-                    child: user.isFollowing
-                        ? const Text('Unfollow')
-                        : const Text('Follow')),
+                padding: EdgeInsets.only(top: bannerHeight - 45, right: 8),
+                child: Column(
+                  children: [
+                    IconButton(
+                        onPressed: () {},
+                        color: Colors.white,
+                        icon: const Icon(Icons.edit)),
+                    OutlinedButton(
+                        style: OutlinedButton.styleFrom(
+                            primary:
+                                user.isFollowing ? Colors.red : Colors.blue),
+                        onPressed: () {
+                          // TODO: IMPLEMENT FOLLOWING
+                          print('Follow button clicked');
+                        },
+                        child: user.isFollowing
+                            ? const Text('Unfollow')
+                            : const Text('Follow')),
+                  ],
+                ),
               ),
             ),
             Align(
               alignment: Alignment.centerLeft,
               child: Padding(
                 padding: EdgeInsets.only(top: profilePicDiameter / 3, left: 20),
-                child: Text(user.username,
+                child: SelectableText(user.username,
                     style: Theme.of(context)
                         .textTheme
                         .headlineSmall
@@ -96,7 +105,7 @@ class UserProfile extends StatelessWidget {
               alignment: Alignment.centerLeft,
               child: Padding(
                 padding: const EdgeInsets.only(left: 20),
-                child: Text('@${user.handle}'),
+                child: SelectableText('@${user.handle}'),
               ),
             ),
             if (user.isStaff)
@@ -112,18 +121,18 @@ class UserProfile extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.only(left: 20, top: 12),
               child: DefaultTextStyle(
-                style: follingTextStyle!,
+                style: follingTextStyle,
                 child: Row(
                   children: [
-                    Text(user.followersCount.toString(),
+                    SelectableText(user.followersCount.toString(),
                         style: Theme.of(context).textTheme.titleMedium),
-                    const Text(' Followers'),
+                    const SelectableText(' Followers'),
                     const SizedBox(
                       width: 15,
                     ),
-                    Text(user.followingCount.toString(),
+                    SelectableText(user.followingCount.toString(),
                         style: Theme.of(context).textTheme.titleMedium),
-                    const Text(' Following'),
+                    const SelectableText(' Following'),
                   ],
                 ),
               ),
